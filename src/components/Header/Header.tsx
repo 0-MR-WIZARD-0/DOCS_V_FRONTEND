@@ -1,5 +1,5 @@
-import Image from "next/image"
 import styles from "@/components/Header/Header.module.scss"
+import Image from "next/image"
 import logo from "@/app/assets/logo.png"
 
 const Header = () => {

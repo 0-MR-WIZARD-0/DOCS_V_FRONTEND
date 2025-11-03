@@ -1,0 +1,1 @@
+export const admin_list_wrapper: string;

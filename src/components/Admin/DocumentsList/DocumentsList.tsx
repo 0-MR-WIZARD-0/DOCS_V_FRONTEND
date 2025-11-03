@@ -1,7 +1,8 @@
 "use client";
 
+import styles from "@/components/Admin/DocumentsList/DocumentsList.module.scss"
 import { useEffect, useState } from "react";
-import api from "@/lib/api";
+import api from "@/services/api";
 import EditDocumentModal from "@/components/Admin/EditDocumentModal/EditDocumentModal";
 
 interface Document {
@@ -30,35 +31,18 @@ export default function DocumentsList() {
   }, []);
 
   return (
-    <div>
-      <table border={1} cellPadding={8} style={{ width: "100%" }}>
-        <thead>
-          <tr>
-            <th>Название документа</th>
-            <th>Файл</th>
-            <th>Дата добавления</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {docs.map((doc) => (
-            <tr key={doc.id}>
-              <td>{doc.title || doc.filename}</td>
-              <td>
+    <div className={styles.admin_list_wrapper}>
+      {docs.map((doc) => (
+            <div key={doc.id}>
+              <div>
                 <a href={doc.path ? `http://localhost:4000/${doc.path}` : undefined}
-                   target="_blank"
-                   rel="noreferrer">
-                Открыть
-                </a>
-              </td>
-              <td>{new Date(doc.createdAt).toLocaleString()}</td>
-              <td>
-                <button onClick={() => setEditingDoc(doc)}>Редактировать</button>
-              </td>
-            </tr>
+                  target="_blank"
+                  rel="noreferrer">{doc.title}</a>
+                <p>{new Date(doc.createdAt).toLocaleString()}</p>
+              </div>
+              <button onClick={() => setEditingDoc(doc)}>Редактировать</button>
+            </div>
           ))}
-        </tbody>
-      </table>
       {editingDoc && (
         <EditDocumentModal
           document={editingDoc}

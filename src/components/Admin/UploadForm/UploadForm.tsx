@@ -1,13 +1,17 @@
 "use client";
+
+import styles from "@/components/Admin/UploadForm/UploadForm.module.scss"
 import { useState } from "react";
-import api from "@/lib/api";
+import api from "@/services/api";
 
 export default function UploadDocumentForm() {
+  
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
     if (!file) return;
 
@@ -20,8 +24,8 @@ export default function UploadDocumentForm() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMessage("Документ загружен!");
-      setFile(null);
-      setTitle("");
+      // setFile(null);
+      // setTitle("");
     } catch (err) {
       console.error(err);
       setMessage("Ошибка загрузки");
@@ -29,22 +33,27 @@ export default function UploadDocumentForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.form_wrapper}>
       <div>
-        <label>Название документа:</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+        <div className={styles.title}>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            placeholder="Название"
+          />
+        </div>
+        <div className={styles.file}>
+          <label>
+            {/* Прикрепите файл: */}
+            <input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} required />
+            <span>Выберите файл</span>
+          </label>
+        </div>
+        <button type="submit">Загрузить</button>
+        {message && <p>{message}</p>}
       </div>
-      <div>
-        <label>Файл:</label>
-        <input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} required />
-      </div>
-      <button type="submit">Загрузить</button>
-      {message && <p>{message}</p>}
     </form>
   );
 }

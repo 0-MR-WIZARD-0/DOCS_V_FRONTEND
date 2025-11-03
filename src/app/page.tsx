@@ -1,8 +1,8 @@
 'use client'
 
 import DocumentView from "@/components/DocumentView/DocumentView";
-import SearchBar from "@/components/SearchBar";
-import api from "@/lib/api";
+import SearchBar from "@/components/SearchBar/SearchBar";
+import api from "@/services/api";
 import { useEffect, useState } from "react";
 
 interface Document {

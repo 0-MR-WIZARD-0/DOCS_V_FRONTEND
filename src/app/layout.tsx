@@ -4,8 +4,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
-  title: "Portal DOC-V",
-  description: "",
+  title: "Диссертационный совет",
 };
 
 export default function RootLayout({
@@ -15,6 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="shortcut icon" href="/logo.png" type="image/png"/>
+      </head>
       <body>
         <Header/>
           {children}

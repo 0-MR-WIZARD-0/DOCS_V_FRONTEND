@@ -3,7 +3,7 @@
   margin: 0;
   text-decoration: none;
   color: rgba(0, 26, 52, .65);
-
+  list-style-type: none;
 }
 
 html{
@@ -29,12 +29,12 @@ header, footer{
 
 header{
   border-bottom: 1px solid black;
-  margin: 0 20px 0 0;
+  margin: 0 0 20px 0;
 }
 
 footer{
   border-top: 1px solid black;
-  margin: auto 20px 0 0;
+  margin-top: auto;
 }
 
 button{
@@ -43,6 +43,7 @@ button{
   border-radius: 12px;
   background-color: #f2f5f9;
   width: 250px;
+  max-height: 40px;
   &:hover{
       background-color: #808791;
       color: #f2f5f9;
@@ -51,4 +52,47 @@ button{
 
 p, label, button{
   font-size: 14px;
+}
+
+label{
+  position: relative;
+  display: inline-block;
+  &>span{
+      width: 100%;
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      border: 1px solid #808791;
+      text-align: center;
+      border-radius: 12px;
+      background-color: #f2f5f9;
+      padding: 10px 0;
+      &:hover{
+          background-color: #808791;
+          color: #f2f5f9;
+      }
+  }
+  &>input{
+      position: absolute;
+      z-index: -1;
+      opacity: 0;
+      display: block;
+      width: 0;
+      height: 0;
+  }
+}
+
+form, form>div{
+  &>input, textarea{
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 1px solid #808791; 
+    margin-bottom: 20px;
+    box-sizing: border-box; 
+  }
+  &>textarea{
+    resize: vertical;
+    height: 100px;
+  }
 }

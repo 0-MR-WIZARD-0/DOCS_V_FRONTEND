@@ -2,13 +2,11 @@
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-gap: 20px;
-    margin: 0px 20px;
     &>div{
         display: flex;
         grid-column: 4 / 10;
         grid-row: 1 / 2;
         justify-content: space-evenly;
-        margin-top: 20px;
     }
     &>form{
         grid-column: 4 / 10;

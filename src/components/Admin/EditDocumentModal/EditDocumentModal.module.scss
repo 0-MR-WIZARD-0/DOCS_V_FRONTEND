@@ -1,0 +1,33 @@
+.edit_modal_wrapper {
+    position: fixed;
+    top: 0;
+    left: 0; 
+    right: 0; 
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+
+    & > div {
+        width: 50%;
+        padding: 30px 50px;
+        border: 1px solid #808791; 
+        border-radius: 12px;
+        background-color: #f2f5f9;
+
+        & > h2 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        & > form {
+            display: flex;
+            flex-direction: column;
+            & > button {
+                margin-top: 15px;
+                width: 100%;
+            }
+        }
+    }
+}

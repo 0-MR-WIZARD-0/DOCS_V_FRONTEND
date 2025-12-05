@@ -2,8 +2,15 @@
     display: flex;
     flex-direction: column;
     &>div{
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
+        &>div{
+            &>p{
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+        }
+        &>button+button{
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
     }
 }

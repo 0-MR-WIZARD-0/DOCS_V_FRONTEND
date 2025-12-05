@@ -1,0 +1,12 @@
+.login_wrapper{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-gap: 20px;
+    margin: auto 20px;
+    &>form{
+        display: flex;
+        grid-column: 5 / 9;
+        flex-direction: column;
+        align-items: center;
+    }
+}

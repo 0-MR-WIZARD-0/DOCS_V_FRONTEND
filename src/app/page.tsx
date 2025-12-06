@@ -57,7 +57,7 @@ export default function Home() {
               name={doc.title}
               description={doc.description}
               date={doc.createdAt}
-              url={`http://localhost:4000/${doc.path}`}
+              url={`${process.env.NEXT_PUBLIC_API_URL}${doc.path}`}
             />
           ))
         ) : (
@@ -75,7 +75,7 @@ export default function Home() {
                 name={doc.title}
                 description={doc.description}
                 date={doc.createdAt}
-                url={`http://localhost:4000/${doc.path}`}
+                url={`${process.env.NEXT_PUBLIC_API_URL}${doc.path}`}
               />
             ))}
             <hr style={{ margin: "0 20px", borderStyle: "dashed" }} />

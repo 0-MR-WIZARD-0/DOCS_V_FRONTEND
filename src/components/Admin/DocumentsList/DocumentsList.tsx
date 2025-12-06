@@ -46,7 +46,7 @@ export default function DocumentsList() {
           <div>
             <h4>
               <a
-                href={doc.path ? `http://localhost:4000/${doc.path}` : undefined}
+                href={doc.path ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}` : undefined}
                 target="_blank"
                 rel="noreferrer">
               {doc.title || doc.filename}

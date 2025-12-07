@@ -3,6 +3,7 @@
 import styles from "@/components/Admin/UploadForm/UploadForm.module.scss";
 import { useState, useEffect, useMemo } from "react";
 import api from "@/services/api";
+import { allowedTypes } from "@/types/allowedTypes";
 
 export default function UploadDocumentForm() {
   const [title, setTitle] = useState("");
@@ -38,6 +39,11 @@ export default function UploadDocumentForm() {
   const handleSubmit = async (e: React.FormEvent) => {
 
   e.preventDefault();
+
+  if (file && !allowedTypes.includes(file.type)) {
+    setMessage("Недопустимый формат файла. Разрешены: PDF, Word, Excel.");
+    return;
+  }
 
   const formData = new FormData();
   formData.append("title", title);
@@ -107,7 +113,18 @@ export default function UploadDocumentForm() {
           <label>
             <input
               type="file"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              accept=".pdf,.doc,.docx,.xls,.xlsx"
+              onChange={(e) => {
+                const f = e.target.files?.[0] ?? null;
+                if (f && !allowedTypes.includes(f.type)) {
+                  setMessage("Разрешены только PDF, Word и Excel файлы");
+                  e.target.value = "";
+                  setFile(null);
+                  return;
+                }
+                setMessage("");
+                setFile(f);
+              }}
             />
             <span>Выберите файл</span>
           </label>

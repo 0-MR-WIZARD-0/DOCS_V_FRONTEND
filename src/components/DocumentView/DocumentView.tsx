@@ -4,7 +4,7 @@ type Props = {
   name: string
   description: string;
   date: string;
-  url: string;
+  url: string | undefined;
 }
 
 export default function DocumentView({ name, description, date, url }: Props) {

@@ -57,7 +57,7 @@ export default function Home() {
               name={doc.title}
               description={doc.description}
               date={doc.createdAt}
-              url={`${process.env.NEXT_PUBLIC_API_URL}/${doc.path}`}
+              url={doc.path ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}` : undefined}
             />
           ))
         ) : (
@@ -75,7 +75,7 @@ export default function Home() {
                 name={doc.title}
                 description={doc.description}
                 date={doc.createdAt}
-                url={`${process.env.NEXT_PUBLIC_API_URL}/${doc.path}`}
+                url={doc.path ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}` : undefined}
               />
             ))}
             <hr style={{ margin: "0 20px", borderStyle: "dashed" }} />

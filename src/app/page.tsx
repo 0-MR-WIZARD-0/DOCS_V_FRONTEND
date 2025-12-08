@@ -5,6 +5,7 @@ import SearchBar from "@/components/SearchBar/SearchBar";
 import api from "@/services/api";
 import { Document } from "@/types/document";
 import { SearchFilters } from "@/types/searchFilters";
+
 import { useEffect, useState, useCallback } from "react";
 
 export default function Home() {

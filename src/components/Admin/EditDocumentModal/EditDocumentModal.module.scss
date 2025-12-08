@@ -34,3 +34,12 @@
         }
     }
 }
+
+@media (min-width: 320px) and (max-width: 767.99px) { 
+    .edit_modal_wrapper {
+        & > div {
+            width: 70%;
+            padding: 30px 30px;
+        }
+    }
+}

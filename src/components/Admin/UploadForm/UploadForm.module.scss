@@ -1,7 +1,6 @@
 .form_wrapper{
     &>div{
         display: flex;
-        grid-column: 4 / 10;
         flex-direction: column;
         &>input:nth-child(2){
             height: 100px;

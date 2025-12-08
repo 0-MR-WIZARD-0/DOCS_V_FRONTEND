@@ -7,6 +7,10 @@
         grid-column: 4 / 10;
         grid-row: 1 / 2;
         justify-content: space-evenly;
+        &>button{
+            min-height: max-content;
+            width: max-content;
+        }
     }
     &>form{
         grid-column: 4 / 10;
@@ -15,5 +19,45 @@
     &>div+div{
         grid-column: 4 / 10;
         grid-row: 2 / 3;
+    }
+}
+
+@media (min-width: 425px) and (max-width: 767.99px) { //tablet 8fr
+    .tabs_wrapper{
+        grid-template-columns: repeat(8, 1fr);
+        &>div{
+            grid-column: 2 / 8;
+        }
+        &>form{
+            grid-column: 2 / 8;
+        }
+        &>div+div{
+            grid-column: 2 / 8;
+            grid-row: 2 / 3;
+        }
+    }
+}
+
+@media (min-width: 320px) and (max-width: 424.9px) { //mobile 4fr
+    .tabs_wrapper{
+        grid-template-columns: repeat(4, 1fr);
+        margin: 0 20px;
+        &>div{
+            flex-direction: column;
+            grid-column: 1 / 5;
+            &>button{
+                width: 100%;
+            }
+            &>button+button{
+                margin-top: 10px;
+            }
+        }
+        &>form{
+            grid-column: 1 / 5;
+        }
+        &>div+div{
+            grid-column: 1 / 5;
+            grid-row: 2 / 3;
+        }
     }
 }

@@ -8,6 +8,9 @@
                 margin-bottom: 10px;
             }
         }
+        &>button{
+            width: 45%;
+        }
         &>button+button{
             margin-left: 20px;
             margin-bottom: 20px;

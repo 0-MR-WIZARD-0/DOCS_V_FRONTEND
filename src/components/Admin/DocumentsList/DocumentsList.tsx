@@ -10,34 +10,35 @@ import EditDocumentModal from "@/components/Admin/EditDocumentModal/EditDocument
 import { Document } from "@/types/document";
 
 export default function DocumentsList() {
-  
   const [docs, setDocs] = useState<Document[]>([]);
   const [editingDoc, setEditingDoc] = useState<Document | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const fetchDocs = async (): Promise<Document[]> => {
-    const res = await api.get("/documents");
-    return res.data;
+    try {
+      const res = await api.get("/documents");
+      return res.data;
+    } catch (err) {
+      console.error("Failed to load documents:", err);
+      alert("Failed to load documents.");
+      return [];
+    }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchDocs();
-      setDocs(data);
-    };
-    fetchData();
+    fetchDocs().then(setDocs);
   }, []);
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Удалить документ безвозвратно?")) return;
+    if (!confirm("Delete document permanently?")) return;
 
     try {
       setDeletingId(id);
       await api.delete(`/documents/${id}`);
       setDocs((prev) => prev.filter((doc) => doc.id !== id));
     } catch (err) {
-      console.error("Ошибка при удалении документа:", err);
-      alert("Ошибка при удалении документа");
+      console.error("Failed to delete document:", err);
+      alert("Failed to delete document.");
     } finally {
       setDeletingId(null);
     }
@@ -50,16 +51,23 @@ export default function DocumentsList() {
           <div>
             <h4>
               <a
-                href={doc.path ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}` : undefined}
+                href={
+                  doc.path
+                    ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}`
+                    : undefined
+                }
                 target="_blank"
-                rel="noreferrer">
-              {doc.title || doc.filename}
+                rel="noreferrer"
+              >
+                {doc.title || doc.filename}
               </a>
             </h4>
             <p>{doc.description}</p>
             <p>{new Date(doc.createdAt).toLocaleString()}</p>
           </div>
+
           <button onClick={() => setEditingDoc(doc)}>Редактировать</button>
+
           <button
             onClick={() => handleDelete(doc.id)}
             disabled={deletingId === doc.id}
@@ -79,4 +87,3 @@ export default function DocumentsList() {
     </div>
   );
 }
-  

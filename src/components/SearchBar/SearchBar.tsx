@@ -1,15 +1,18 @@
 "use client";
 
 import styles from "@/components/SearchBar/SearchBar.module.scss";
+
+import { useEffect, useRef, useState, useCallback } from "react";
+
+import api from "@/services/api";
 import { Document } from "@/types/document";
 import { SearchBarProps } from "@/types/searchFilters";
-import api from "@/services/api";
-import { useEffect, useRef, useState, useCallback } from "react";
 
 export default function SearchBar({ onResults }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+
   const typingTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const fetchFilteredDocuments = useCallback(async () => {
@@ -20,11 +23,16 @@ export default function SearchBar({ onResults }: SearchBarProps) {
       if (dateFrom) params.from = dateFrom;
       if (dateTo) params.to = dateTo;
 
-      const { data } = await api.get<Document[]>("/documents/search", {params});
+      const { data } = await api.get<Document[]>("/documents/search", { params });
 
       onResults(data, { query, dateFrom, dateTo });
-    } catch (err) {
-      console.error("❌ Ошибка при фильтрации:", err);
+
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("❌ Error while filtering documents:", err.message);
+      } else {
+        console.error("❌ Unknown error while filtering documents:", err);
+      }
     }
   }, [query, dateFrom, dateTo, onResults]);
 
@@ -51,23 +59,26 @@ export default function SearchBar({ onResults }: SearchBarProps) {
     <div className={styles.search_wrapper}>
       <div>
         <input
+          type="text"
           placeholder="Искать по названию"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className={styles.search}
         />
-        <input
-          type="date"
-          value={dateFrom}
-          onChange={(e) => setDateFrom(e.target.value)}
-          className={styles.filter}
-        />
-        <input
-          type="date"
-          value={dateTo}
-          onChange={(e) => setDateTo(e.target.value)}
-          className={styles.filter}
-        />
+        <div className={styles.wrapper_filters}>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            className={styles.filter}
+          />
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            className={styles.filter}
+          />
+        </div>
       </div>
     </div>
   );

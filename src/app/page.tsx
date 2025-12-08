@@ -78,7 +78,7 @@ export default function Home() {
                 url={doc.path ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}` : undefined}
               />
             ))}
-            <hr style={{ margin: "0 20px", borderStyle: "dashed" }} />
+            <hr style={{ margin: "0 20px 20px 20px", borderStyle: "dashed" }} />
           </div>
         ))
       ) : (

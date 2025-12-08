@@ -2,8 +2,6 @@
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-gap: 20px;
-    margin: auto 20px 0 0;
-    // padding: 0 0 20px 0;
     &>div{
         display: flex;
         grid-column: 3 / 11;
@@ -17,23 +15,75 @@
     .search{
         width: 400px;
         padding: 10px 0;
-        border-radius: 12px;
+        border-radius: 15px;
         border: 1px solid black;
         &::placeholder{
             padding-left: 20px;
         }
     }
-    .filter{
-        width: 100px;
-        padding: 10px 10px;
-        border-radius: 12px;
-        border: 1px solid black;
+    .wrapper_filters{
+        &>.filter{
+            padding: 10px 10px;
+            border-radius: 15px;
+            border: 1px solid black;
+        }
     }
 }
 
-@media (min-width: 1024px) and (max-width: 1339.9px) {
-.search_wrapper{
-            grid-template-columns: repeat(8, 1fr);
-
+@media (min-width: 768px) and (max-width: 1020px) {
+    .search_wrapper{
+        &>div{
+            grid-column: 2 / 12;
+        }
+        .search{
+            width: 350px;
+        }
+    }
 }
+
+@media (min-width: 425px) and (max-width: 767.99px) { //tablet 8 fr
+    .search_wrapper{
+        grid-template-columns: repeat(8, 1fr);
+        &>div{
+            flex-direction: column;
+            grid-column: 2 / 8;
+            &>div{
+                &>input+input{
+                    margin-left: 0px;
+                }
+            }
+        }
+        .search{
+            width: 100%;
+        }
+        .wrapper_filters{
+            display: flex;
+            justify-content: space-around; 
+            margin-top: 20px;
+        }
+    }
+}
+
+@media (min-width: 320px) and (max-width: 424.9px) { //mobile 4 fr
+    .search_wrapper{
+        grid-template-columns: repeat(4, 1fr);
+        &>div{
+            flex-direction: column;
+            grid-column: 1 / 5;
+            margin: 0 20px;
+            &>div{
+                &>input+input{
+                    margin-left: 0px;
+                }
+            }
+            .search{
+                width: 100%;
+            }
+            .wrapper_filters{
+                display: flex;
+                justify-content: space-around; 
+                margin-top: 20px;
+            }
+        }
+    }
 }

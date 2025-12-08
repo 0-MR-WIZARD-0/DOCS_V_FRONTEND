@@ -7,9 +7,26 @@
         &>a{
             background-color: #f2f5f9;
             padding: 15px 0;
-            border-radius: 12px;
+            border-radius: 15px;
             margin-bottom: 20px;
             font-weight: bold;
+        }
+    }
+}
+
+@media (min-width: 425px) and (max-width: 767.99px) { //tablet 8 fr
+    .footer{
+        &>div{
+            grid-column: 2 / 8;
+        }
+    }
+}
+
+@media (min-width: 320px) and (max-width: 424.9px) { //mobile 4 fr
+    .footer{
+        &>div{
+            margin: 0 20px;
+            grid-column: 1 / 5;
         }
     }
 }

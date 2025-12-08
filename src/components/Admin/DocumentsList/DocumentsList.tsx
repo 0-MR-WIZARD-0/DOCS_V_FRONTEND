@@ -1,12 +1,16 @@
 "use client";
 
 import styles from "@/components/Admin/DocumentsList/DocumentsList.module.scss";
-import { useEffect, useState } from "react";
+
 import api from "@/services/api";
+
+import { useEffect, useState } from "react";
 import EditDocumentModal from "@/components/Admin/EditDocumentModal/EditDocumentModal";
+
 import { Document } from "@/types/document";
 
 export default function DocumentsList() {
+  
   const [docs, setDocs] = useState<Document[]>([]);
   const [editingDoc, setEditingDoc] = useState<Document | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);

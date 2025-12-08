@@ -17,3 +17,21 @@
         }
     }
 }
+
+@media (min-width: 425px) and (max-width: 767.99px) { //tablet 8fr
+    .document_wrapper{
+        grid-template-columns: repeat(8, 1fr);
+        &>div{
+            grid-column: 1 / 9;
+        }
+    }
+}
+
+@media (min-width: 320px) and (max-width: 424.9px) { //mobile 4 fr
+    .document_wrapper{
+        grid-template-columns: repeat(4, 1fr);
+        &>div{
+            grid-column: 1 / 5;
+        }
+    }
+}

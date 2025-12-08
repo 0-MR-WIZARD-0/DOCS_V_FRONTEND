@@ -1,36 +1,33 @@
 'use client'
 
 import styles from "@/app/login/login.module.scss"
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { login } from "@/services/auth"
+
 export default function LoginPage() {
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-
+    setLoading(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-        credentials: 'include',
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.message || 'Ошибка авторизации')
-      }
-
-      router.push('/admin')
-    } catch (err) {
-      // setError(err.message)
-      console.log(err);
+      await login(username, password);
+      router.push('/admin');
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error("❌ Error: " + error.message);
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -43,7 +40,6 @@ export default function LoginPage() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          className="border p-2 rounded"
         />
         <input
           type="password"
@@ -51,11 +47,10 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="border p-2 rounded"
         />
-        {error && <p className="text-red-500">{error}</p>}
-        <button type="submit" className="bg-black text-white py-2 rounded hover:bg-gray-800">
-          Войти
+        {error && <p>{error}</p>}
+        <button type="submit" disabled={loading}>
+          {loading ? 'Входим…' : 'Войти'}
         </button>
       </form>
     </div>

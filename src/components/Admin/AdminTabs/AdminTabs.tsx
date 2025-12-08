@@ -1,7 +1,9 @@
 'use client'
 
 import styles from "@/components/Admin/AdminTabs/AdminTabs.module.scss"
+
 import { useState } from "react";
+
 import UploadForm from "../UploadForm/UploadForm";
 import DocumentsList from "../DocumentsList/DocumentsList";
 

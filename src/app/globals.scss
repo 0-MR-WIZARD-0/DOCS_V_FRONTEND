@@ -37,6 +37,18 @@ footer{
   margin-top: auto;
 }
 
+@media (min-width: 425px) and (max-width: 767.99px) { //tablet 4 fr
+  header, footer{
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+@media (min-width: 320px) and (max-width: 424.9px) { //mobile 4 fr
+  header, footer{
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 button{
   padding: 10px;
   border: 1px solid #808791; 

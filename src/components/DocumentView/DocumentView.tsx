@@ -8,7 +8,6 @@ type Props = {
 }
 
 export default function DocumentView({ name, description, date, url }: Props) {
-  
   return (
     <div className={styles.document_wrapper}>
       <div>

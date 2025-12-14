@@ -7,6 +7,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 99;
+    // filter: blur(0.5);
     background: rgba(0,0,0,0.2);
 
     & > div {
@@ -35,11 +37,11 @@
     }
 }
 
-@media (min-width: 320px) and (max-width: 767.99px) { 
-    .edit_modal_wrapper {
-        & > div {
-            width: 70%;
-            padding: 30px 30px;
-        }
-    }
-}
+// @media (min-width: 320px) and (max-width: 767.99px) { 
+//     .edit_modal_wrapper {
+//         & > div {
+//             width: 70%;
+//             padding: 30px 30px;
+//         }
+//     }
+// }

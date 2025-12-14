@@ -4,7 +4,7 @@
     grid-gap: 20px;
     &>div{
         display: flex;
-        grid-column: 4 / 10;
+        grid-column: 3 / 11;
         grid-row: 1 / 2;
         justify-content: space-evenly;
         &>button{
@@ -13,11 +13,11 @@
         }
     }
     &>form{
-        grid-column: 4 / 10;
+        grid-column: 3 / 11;
         grid-row: 2 / 3;
     }
     &>div+div{
-        grid-column: 4 / 10;
+        grid-column: 3 / 11;
         grid-row: 2 / 3;
     }
 }

@@ -1,40 +1,41 @@
 "use client";
 
-import styles from "@/components/Admin/UploadForm/UploadForm.module.scss";
-import { useState, useEffect, useMemo } from "react";
+import styles from "@/components/Admin/UploadForms/UploadDocument/UploadDocument.module.scss";
+import { useState, useEffect } from "react";
 import api from "@/services/api";
 import { allowedTypes } from "@/types/allowedTypes";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchDocuments } from "@/store/slices/documentsSlice";
+import { Section } from "@/types/section";
 
-export default function UploadDocumentForm() {
+export default function UploadDocument() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [allCategories, setAllCategories] = useState<string[]>([]);
+
+  const [sections, setSections] = useState<Section[]>([]);
+  const [selectedSectionId, setSelectedSectionId] = useState("");
+  const [selectedSubsectionId, setSelectedSubsectionId] = useState("");
+  const [isSub, setIsSub] = useState(false);
+
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    const loadCategories = async () => {
+    const loadSections = async () => {
       try {
-        const res = await api.get("/categories");
-        setAllCategories(res.data ?? []);
+        const res = await api.get("/sections");
+        setSections(res.data ?? []);
       } catch (err) {
-        console.error("Failed to load categories:", err);
-        setMessage("Failed to load categories.");
+        console.error("Failed to load sections:", err);
+        setMessage("Ошибка загрузки разделов.");
       }
     };
-
-    loadCategories();
+    loadSections();
   }, []);
-
-  const filteredCategories = useMemo(() => {
-    if (!category.trim()) return [];
-    return allCategories.filter((c) =>
-      c.toLowerCase().includes(category.toLowerCase())
-    );
-  }, [category, allCategories]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,12 +46,32 @@ export default function UploadDocumentForm() {
       return;
     }
 
+    if (!selectedSectionId && !isSub) {
+      setMessage("Выберите раздел.");
+      return;
+    }
+
+    if (isSub && !selectedSubsectionId) {
+      setMessage("Выберите подраздел.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("category", category);
     formData.append("createdAt", date);
     if (file) formData.append("file", file);
+
+    formData.append(
+      "data",
+      JSON.stringify({
+        title,
+        description,
+        createdAt: date,
+        sectionId: !isSub ? Number(selectedSectionId) : null,
+        subsectionId: isSub ? Number(selectedSubsectionId) : null,
+      })
+    );
 
     try {
       setIsLoading(true);
@@ -59,19 +80,29 @@ export default function UploadDocumentForm() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
+      dispatch(fetchDocuments());
+
       setMessage("Документ успешно загружен.");
       setTitle("");
       setDescription("");
-      setCategory("");
       setDate("");
       setFile(null);
+      setSelectedSectionId("");
+      setSelectedSubsectionId("");
+      setIsSub(false);
+
     } catch (err) {
       console.error("Upload error:", err);
-      setMessage("Upload failed. Please try again.");
+      setMessage("Ошибка загрузки документа.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const subsections =
+    isSub && selectedSectionId
+      ? sections.find((s) => s.id === Number(selectedSectionId))?.subsections ?? []
+      : [];
 
   return (
     <form onSubmit={handleSubmit} className={styles.form_wrapper}>
@@ -92,23 +123,50 @@ export default function UploadDocumentForm() {
           disabled={isLoading}
         />
 
-        <input
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          placeholder="Категория"
-          required
+        <select
+          value={selectedSectionId}
+          onChange={(e) => {
+            setSelectedSectionId(e.target.value);
+            setSelectedSubsectionId("");
+          }}
           disabled={isLoading}
-        />
+          required
+        >
+          <option value="">Выберите раздел</option>
+          {sections.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
 
-        {filteredCategories.length > 0 && (
-          <ul>
-            {filteredCategories.map((c) => (
-              <li key={c} onClick={() => setCategory(c)}>
-                {c}
-              </li>
+        <label style={{ display: "block", marginBottom: 8 }}>
+          <input
+            type="checkbox"
+            checked={isSub}
+            onChange={(e) => {
+              setIsSub(e.target.checked);
+              setSelectedSubsectionId("");
+            }}
+            disabled={isLoading}
+          />
+          {" "}Это подраздел
+        </label>
+
+        {isSub && (
+          <select
+            value={selectedSubsectionId}
+            onChange={(e) => setSelectedSubsectionId(e.target.value)}
+            disabled={isLoading}
+            required
+          >
+            <option value="">Выберите подраздел</option>
+            {subsections.map((sub) => (
+              <option key={sub.id} value={sub.id}>
+                {sub.name}
+              </option>
             ))}
-          </ul>
+          </select>
         )}
 
         <input
@@ -126,14 +184,12 @@ export default function UploadDocumentForm() {
               accept=".pdf,.doc,.docx,.xls,.xlsx"
               onChange={(e) => {
                 const f = e.target.files?.[0] ?? null;
-
                 if (f && !allowedTypes.includes(f.type)) {
                   setMessage("Only PDF, Word and Excel files are allowed.");
                   setFile(null);
                   e.target.value = "";
                   return;
                 }
-
                 setMessage("");
                 setFile(f);
               }}

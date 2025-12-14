@@ -108,3 +108,19 @@ form, form>div{
     height: 100px;
   }
 }
+
+select{
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid #808791; 
+  border-radius: 12px;
+  appearance: none;
+  margin-bottom: 20px;
+  &:active{
+    border-radius: 12px 12px 0 0;
+  }
+  &:hover{
+    border-radius: 12px 12px 0 0;
+  }
+}

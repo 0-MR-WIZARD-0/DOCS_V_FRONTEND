@@ -2,11 +2,10 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get('jwt')?.value
+  const token = req.cookies.get('jwt')?.value || null
 
   if (!token && req.nextUrl.pathname.startsWith('/admin')) {
-    const loginUrl = new URL('/login', req.url)
-    return NextResponse.redirect(loginUrl)
+    return NextResponse.redirect(new URL('/login', req.url))
   }
 
   return NextResponse.next()

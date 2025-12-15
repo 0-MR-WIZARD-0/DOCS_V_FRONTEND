@@ -6,5 +6,5 @@ export interface Subsection {
   description?: string;
   order: number;
   sectionId: number;
-  // documents: Document[];
+  documents: Document[];
 }

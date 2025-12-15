@@ -7,10 +7,10 @@ import documentsReducer from "./slices/documentsSlice";
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
-    sections: sectionsReducer,
-    subsections: subsectionsReducer,
-    documents: documentsReducer,
+      auth: authReducer,
+      sections: sectionsReducer,
+      subsections: subsectionsReducer,
+      documents: documentsReducer,
   },
 });
 

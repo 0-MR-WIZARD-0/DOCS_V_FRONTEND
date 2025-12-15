@@ -7,12 +7,16 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(config => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const state = store.getState() as any;
-  const token = state.auth.token || localStorage.getItem("token");
+  if (typeof window !== 'undefined') {
+    const token = store.getState().auth.token || localStorage.getItem("token");
 
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+
   return config;
 });
 
 export default api;
+

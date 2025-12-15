@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction, createAction } from "@reduxjs/toolkit";
 import api from "@/services/api";
 import { Section } from "@/types/section";
 
@@ -14,6 +14,8 @@ export const fetchSections = createAsyncThunk("sections/fetch", async () => {
   return res.data as Section[];
 });
 
+export const updateSections = createAction<Section[]>("sections/update");
+
 export const deleteSection = createAsyncThunk("sections/delete", async (id: number) => {
   await api.delete(`/sections/${id}`);
   return id;
@@ -25,6 +27,9 @@ const sectionsSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
+      .addCase(updateSections, (state, action) => {
+        state.items = action.payload;
+      })
       .addCase(fetchSections.pending, state => { state.loading = true; })
       .addCase(fetchSections.fulfilled, (state, action: PayloadAction<Section[]>) => {
         state.items = action.payload;
@@ -33,6 +38,7 @@ const sectionsSlice = createSlice({
       .addCase(deleteSection.fulfilled, (state, action: PayloadAction<number>) => {
         state.items = state.items.filter(s => s.id !== action.payload);
       })
+
   },
 });
 

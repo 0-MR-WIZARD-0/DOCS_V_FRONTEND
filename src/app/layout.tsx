@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import ReduxProvider from "@/store/Provider";
+import ReduxProvider from "@/store/ReduxProvider";
 
 export const metadata: Metadata = {
   title: "Диссертационный совет",
@@ -19,11 +19,11 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/logo.png" type="image/png"/>
       </head>
       <body>
-        <ReduxProvider>
+            <ReduxProvider>
           <Header/>
-            {children}
+                {children}
           <Footer/>
-        </ReduxProvider>
+            </ReduxProvider>
       </body>
     </html>
   );

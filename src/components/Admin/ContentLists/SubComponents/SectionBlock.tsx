@@ -37,14 +37,17 @@ const SectionBlock: React.FC<Props> = ({ section, index, sections, setModal, doc
     });
   };
 
+  const moveUp = () => moveItem(sections, section.id, "sections", "up");
+  const moveDown = () => moveItem(sections, section.id, "sections", "down");
+
   return (
     <div>
       <div className={styles.wrapper_section}>
         <div className={styles.title}>
           <h2>{section.name}</h2>
           <div>
-            <span className={`${styles.moveLink} ${index === 0 ? styles.disabled : ""}`} onClick={() => moveItem(sections, index, index - 1, "sections")}>вверх</span>
-            <span className={`${styles.moveLink} ${index === sections.length - 1 ? styles.disabled : ""}`} onClick={() => moveItem(sections, index, index + 1, "sections")}>вниз</span>
+            <span className={`${styles.moveLink} ${index === 0 ? styles.disabled : ""}`} onClick={moveUp}>вверх</span>
+            <span className={`${styles.moveLink} ${index === sections.length - 1 ? styles.disabled : ""}`} onClick={moveDown}>вниз</span>
           </div>
         </div>
 

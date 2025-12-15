@@ -29,8 +29,8 @@ const DocumentItemComponent: React.FC<Props> = ({
 
   const parentId = subsectionId ?? sectionId;
 
-  const moveUp = () => moveItem(docs, index, index - 1, "documents", parentId);
-  const moveDown = () => moveItem(docs, index, index + 1, "documents", parentId);
+  // const moveUp = () => moveItem(docs, index, index - 1, "documents", parentId);
+  // const moveDown = () => moveItem(docs, index, index + 1, "documents", parentId);
 
   const onDelete = () => {
     if (!confirm("Удалить документ навсегда?")) return;
@@ -49,14 +49,14 @@ const DocumentItemComponent: React.FC<Props> = ({
 
           <span
             className={`${styles.moveLink} ${index === 0 ? styles.disabled : ""}`}
-            onClick={index === 0 ? undefined : moveUp}
+            // onClick={index === 0 ? undefined : moveUp}
           >
             вверх
           </span>
 
           <span
             className={`${styles.moveLink} ${index === docs.length - 1 ? styles.disabled : ""}`}
-            onClick={index === docs.length - 1 ? undefined : moveDown}
+            // onClick={index === docs.length - 1 ? undefined : moveDown}
           >
             вниз
           </span>

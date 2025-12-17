@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/services/api";
+import api from "@/app/api/api";
 
 import { Section } from "@/types/section";
 import { Document } from "@/types/document";
@@ -11,6 +11,8 @@ import { useEffect, useState, useCallback } from "react";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import DocumentView from "@/components/DocumentView/DocumentView";
 
+import styles from "@/app/main.module.scss"
+
 export default function Home() {
   const [sections, setSections] = useState<Section[]>([]);
   const [searchedDocs, setSearchedDocs] = useState<Document[]>([]);
@@ -19,8 +21,6 @@ export default function Home() {
   const loadStructure = useCallback(async () => {
     try {
       const res = await api.get("/sections");
-      console.log(res.data);
-      
       setSections(
         Array.isArray(res.data)
           ? res.data.sort((a: Section, b: Section) => a.order - b.order)
@@ -40,8 +40,8 @@ export default function Home() {
 
   const handleSearchResults = useCallback(
     (docs: Document[], filters: SearchFilters) => {
-      const { query, dateFrom, dateTo } = filters;
-      const hasFilters = query.trim() || dateFrom || dateTo;
+      const { query } = filters;
+      const hasFilters = query.trim();
 
       if (!hasFilters) {
         setIsSearching(false);
@@ -58,9 +58,8 @@ export default function Home() {
   );
 
   return (
-    <div style={{ paddingBottom: 50 }}>
+    <div>
       <SearchBar onResults={handleSearchResults} />
-
       {isSearching ? (
         searchedDocs.length ? (
           searchedDocs.map((doc) => (
@@ -68,7 +67,6 @@ export default function Home() {
               key={doc.id}
               name={doc.title}
               description={doc.description}
-              date={doc.createdAt ?? ""}
               url={
                 doc.path
                   ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}`
@@ -77,18 +75,14 @@ export default function Home() {
             />
           ))
         ) : (
-          <p style={{ textAlign: "center", marginTop: 20 }}>Ничего не найдено</p>
+          <p style={{ textAlign: "center", marginTop: "20px" }}>Ничего не найдено</p>
         )
       ) : (
-        <>
+        <div className={styles.wrapper}>
           {sections.map((section) => (
-            <div key={section.id} style={{ marginBottom: 40 }}>
-              <h2 style={{ margin: "20px" }}>{section.name}</h2>
-
-              {section.description && (
-                <p style={{ margin: "0 20px 20px" }}>{section.description}</p>
-              )}
-
+            <div key={section.id} className={styles.wrapper_item}>
+              <h2>{section.name}</h2>
+              {(section.description ? <p>{section.description}</p> : "")}
               {section.documents
                 ?.sort((a, b) => a.order - b.order)
                 .map((doc) => (
@@ -96,7 +90,6 @@ export default function Home() {
                     key={doc.id}
                     name={doc.title}
                     description={doc.description}
-                    date={doc.createdAt}
                     url={
                       doc.path
                         ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}`
@@ -104,17 +97,12 @@ export default function Home() {
                     }
                   />
                 ))}
-
               {section.subsections
                 ?.sort((a, b) => a.order - b.order)
                 .map((sub) => (
-                  <div key={sub.id} style={{ marginLeft: 30, marginTop: 25 }}>
-                    <h3 style={{ margin: "10px 0" }}>{sub.name}</h3>
-
-                    {sub.description && (
-                      <p style={{ margin: "0 0 15px" }}>{sub.description}</p>
-                    )}
-
+                  <div key={sub.id} className={styles.wrapper_sub_item}>
+                    <h3>{sub.name}</h3>
+                    {(sub.description ? <p>{sub.description}</p> : "")}
                     {sub.documents
                       ?.sort((a, b) => a.order - b.order)
                       .map((doc) => (
@@ -122,7 +110,6 @@ export default function Home() {
                           key={doc.id}
                           name={doc.title}
                           description={doc.description}
-                          date={doc.createdAt}
                           url={
                             doc.path
                               ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}`
@@ -134,7 +121,7 @@ export default function Home() {
                 ))}
             </div>
           ))}
-        </>
+        </div>
       )}
     </div>
   );

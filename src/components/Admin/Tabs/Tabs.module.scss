@@ -22,11 +22,18 @@
     }
 }
 
-@media (min-width: 425px) and (max-width: 767.99px) { //tablet 8fr
+@media (min-width: 425px) and (max-width: 1023.99px) {
     .tabs_wrapper{
         grid-template-columns: repeat(8, 1fr);
         &>div{
             grid-column: 2 / 8;
+            flex-direction: column;
+            &>button{
+                width: 100%;
+            }
+            &>button+button{
+                margin-top: 10px;
+            }
         }
         &>form{
             grid-column: 2 / 8;
@@ -38,7 +45,7 @@
     }
 }
 
-@media (min-width: 320px) and (max-width: 424.9px) { //mobile 4fr
+@media (min-width: 320px) and (max-width: 424.9px) {
     .tabs_wrapper{
         grid-template-columns: repeat(4, 1fr);
         margin: 0 20px;

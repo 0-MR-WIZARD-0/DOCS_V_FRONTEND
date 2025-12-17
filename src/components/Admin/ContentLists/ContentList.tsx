@@ -1,19 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import styles from "@/components/Admin/ContentLists/ContentList.module.scss";
+
+import api from "@/app/api/api";
+
+import EditSectionModal from "../EditModal/EditModal";
+import SectionBlock from "@/components/Admin/ContentLists/SubComponents/SectionBlock";
+
 import { useEffect, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
-import EditSectionModal from "../EditSectionModal/EditSectionModal";
-import api from "@/services/api";
 
-import { fetchSections, updateSections } from "@/store/slices/sectionsSlice";
-import { fetchSubsections, updateSubsections, updateSubsectionsOrder } from "@/store/slices/subsectionsSlice";
-import { fetchDocuments, updateDocuments } from "@/store/slices/documentsSlice";
+import { fetchSections } from "@/store/slices/sectionsSlice";
+import { fetchSubsections} from "@/store/slices/subsectionsSlice";
+import { fetchDocuments } from "@/store/slices/documentsSlice";
+
 import { Section } from "@/types/section";
 import { Subsection } from "@/types/subSection";
 import { Document } from "@/types/document";
-import SectionBlock from "./SubComponents/SectionBlock";
 
 export type ModalType =
   | { type: "section"; data: Section }
@@ -24,10 +29,11 @@ export type MoveItemFn = (
   allItems: Document[] | Section[] | Subsection[],
   itemId: number,
   type: "sections" | "subsections" | "documents",
-  direction: "up" | "down"
+  direction: "up" | "down",
+  order?: number 
 ) => Promise<void>;
 
-const SectionList: React.FC = () => {
+const ContentList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const sections = useSelector((state: RootState) => state.sections.items);
@@ -43,7 +49,7 @@ const SectionList: React.FC = () => {
     dispatch(fetchDocuments());
   }, [dispatch]);
 
-  const moveItem: MoveItemFn = async (allItems, itemId, type, direction) => {
+  const moveItem: MoveItemFn = async (allItems, itemId, type, direction, order) => {
   if (isLoading) return;
 
   const item = allItems.find((i) => i.id === itemId);
@@ -53,9 +59,13 @@ const SectionList: React.FC = () => {
   if (currentIndex === -1) return;
 
   let newOrder = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+  let newOrderSub = direction === "up" ? order! - 1 : order! + 1;
 
-  if (newOrder < 0) newOrder = 1;
-  if (newOrder >= allItems.length) newOrder = allItems.length - 1;
+  if (newOrder < 0) newOrder = 0;
+  if (newOrder >= allItems.length) newOrder = allItems.length;
+
+  if (newOrderSub! < 0) newOrderSub = 0;
+  if (newOrderSub! >= allItems.length) newOrderSub = allItems.length;
 
   setIsLoading(true);
 
@@ -64,16 +74,9 @@ const SectionList: React.FC = () => {
     if (type === "sections") {
       await api.put(`/sections/${item.id}/move/${newOrder + 1}`);
     } else if (type === "subsections") {
-      console.log(item);
-      if (direction === "up"){
-        console.log(`/subsections/${item.id}/move/${newOrder}`);
-        // await api.put(`/subsections/${item.id}/move/${newOrder}`);
-      }else if(direction === "down"){
-        console.log(`/subsections/${item.id}/move/${newOrder+1}`);
-        // await api.put(`/subsections/${item.id}/move/${newOrder+1}`);
-      }
+      await api.put(`/subsections/${item.id}/move/${newOrderSub}`);
     } else if (type === "documents") {
-      // await api.put(`/documents/${item.id}/move/${newOrder + 1}`);
+      await api.put(`/documents/${item.id}/move/${newOrderSub}`);
     }
 
     dispatch(fetchSections());
@@ -120,8 +123,9 @@ const SectionList: React.FC = () => {
           }}
         />
       )}
+
     </div>
   );
 };
 
-export default SectionList;
+export default ContentList;

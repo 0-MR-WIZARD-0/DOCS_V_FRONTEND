@@ -5,7 +5,6 @@ export interface Document {
   filename?: string;
   order: number;
   path: string;
-  createdAt: string;
   sectionId?: number | null;
   subsectionId?: number | null;
 }

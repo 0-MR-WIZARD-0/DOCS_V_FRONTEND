@@ -3,6 +3,8 @@ import "./globals.scss";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import ReduxProvider from "@/store/ReduxProvider";
+import AuthInit from "./providers/AuthInit";
+import AdminGuard from "./AdminGuard";
 
 export const metadata: Metadata = {
   title: "Диссертационный совет",
@@ -19,11 +21,14 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/logo.png" type="image/png"/>
       </head>
       <body>
-            <ReduxProvider>
-          <Header/>
+          <ReduxProvider>
+            <AuthInit/>
+            <Header/>
+              <AdminGuard>
                 {children}
-          <Footer/>
-            </ReduxProvider>
+              </AdminGuard>
+            <Footer/>
+          </ReduxProvider>
       </body>
     </html>
   );

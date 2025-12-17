@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "@/components/Admin/ContentLists/ContentList.module.scss";
 import { Document } from "@/types/document";
-import EditItemModal from "../../EditSectionModal/EditSectionModal";
+import EditItemModal from "../../EditModal/EditModal";
 import { MoveItemFn } from "../ContentList";
 import { useAppDispatch } from "@/store/hooks";
 import { deleteDocument } from "@/store/slices/documentsSlice";
@@ -29,8 +29,8 @@ const DocumentItemComponent: React.FC<Props> = ({
 
   const parentId = subsectionId ?? sectionId;
 
-  // const moveUp = () => moveItem(docs, index, index - 1, "documents", parentId);
-  // const moveDown = () => moveItem(docs, index, index + 1, "documents", parentId);
+  const moveUp = () => moveItem(docs, doc.id, "documents", "up", doc.order);
+  const moveDown = () => moveItem(docs, doc.id, "documents", "down", doc.order);
 
   const onDelete = () => {
     if (!confirm("Удалить документ навсегда?")) return;
@@ -38,40 +38,23 @@ const DocumentItemComponent: React.FC<Props> = ({
   };
 
   return (
-    <div style={{ marginLeft: "40px" }} className={styles.wrapper_section}>
+    <div className={styles.wrapper_section} style={{ paddingLeft: "20px" }}>
       <div className={styles.title}>
-        <div>
-          <p>
-            <a href={doc.path ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}` : undefined}>
-              Документ: {doc.title}
-            </a>
-          </p>
-
-          <span
-            className={`${styles.moveLink} ${index === 0 ? styles.disabled : ""}`}
-            // onClick={index === 0 ? undefined : moveUp}
-          >
-            вверх
-          </span>
-
-          <span
-            className={`${styles.moveLink} ${index === docs.length - 1 ? styles.disabled : ""}`}
-            // onClick={index === docs.length - 1 ? undefined : moveDown}
-          >
-            вниз
-          </span>
-        </div>
-
-        <p>Опубликовано: {new Date(doc.createdAt).toLocaleDateString()}</p>
+          <a href={doc.path ? `${process.env.NEXT_PUBLIC_API_URL}/${doc.path}` : undefined}>Документ: {doc.title}</a>
+          <div>
+            <span className={`${styles.moveLink} ${index === 0 ? styles.disabled : ""}`}
+                  onClick={moveUp}
+            >вверх</span>
+            <span className={`${styles.moveLink} ${index === docs.length - 1 ? styles.disabled : ""}`}
+                  onClick={moveDown}
+            >вниз</span>
+          </div>
       </div>
-
-      <p>{doc.description}</p>
-
+      {(doc.description ? <p>{doc.description}</p> : "")}
       <div className={styles.buttons}>
         <button onClick={() => setModal(true)}>Редактировать</button>
         <button onClick={onDelete}>Удалить</button>
       </div>
-
       {modal && (
         <EditItemModal
           type="document"

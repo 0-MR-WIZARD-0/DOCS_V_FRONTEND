@@ -1,0 +1,20 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    margin: 20px 20px 0 20px;
+    &>div+div{
+        margin-top: 20px;
+    }
+    .wrapper_item{
+        &>h2{
+            margin-bottom: 10px;
+        }
+    }
+    .wrapper_sub_item{
+        margin-top: 10px;
+        margin-left: 20px;
+        &>h3{
+            margin-bottom: 10px;
+        }
+    }
+}

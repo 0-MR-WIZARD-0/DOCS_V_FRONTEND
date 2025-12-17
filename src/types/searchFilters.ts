@@ -2,8 +2,6 @@ import { Document } from "./document";
 
 export interface SearchFilters {
   query: string;
-  dateFrom: string;
-  dateTo: string;
 }
 
 export interface SearchBarProps {

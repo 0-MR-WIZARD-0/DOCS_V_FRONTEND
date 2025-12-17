@@ -34,17 +34,20 @@ header{
 
 footer{
   border-top: 1px solid black;
-  margin-top: auto;
+  margin-top: 20px;
+
 }
 
-@media (min-width: 425px) and (max-width: 767.99px) { //tablet 4 fr
+@media (min-width: 425px) and (max-width: 767.99px) {
   header, footer{
+    grid-gap: 0px;
     grid-template-columns: repeat(8, 1fr);
   }
 }
 
-@media (min-width: 320px) and (max-width: 424.9px) { //mobile 4 fr
+@media (min-width: 320px) and (max-width: 424.9px) {
   header, footer{
+    grid-gap: 0px;
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -62,7 +65,7 @@ button{
   }
 }
 
-p, label, button{
+p, a, span, label, button{
   font-size: 14px;
 }
 
@@ -84,7 +87,7 @@ label{
           color: #f2f5f9;
       }
   }
-  &>input[type="text"], input[type="file"], input[type="date"], input[type="password"]{
+  &>input[type="text"], input[type="file"], input[type="password"]{
       position: absolute;
       z-index: -1;
       opacity: 0;
@@ -95,12 +98,12 @@ label{
 }
 
 form, form>div{
-  &>input[type="text"], input[type="file"], input[type="date"], input[type="password"], textarea{
+  &>input[type="text"], input[type="file"], input[type="password"], textarea{
     width: 100%;
     padding: 10px 20px;
     border-radius: 12px;
     border: 1px solid #808791; 
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     box-sizing: border-box; 
   }
   &>textarea{
@@ -116,7 +119,7 @@ select{
   border: 1px solid #808791; 
   border-radius: 12px;
   appearance: none;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   &:active{
     border-radius: 12px 12px 0 0;
   }

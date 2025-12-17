@@ -2,7 +2,7 @@
 
 import styles from "@/components/Admin/UploadForms/UploadSection/UploadSection.module.scss";
 import { useState, useEffect } from "react";
-import api from "@/services/api";
+import api from "@/app/api/api";
 
 export default function ManageSections() {
   const [sections, setSections] = useState<{ id: number; name: string }[]>([]);
@@ -143,7 +143,6 @@ export default function ManageSections() {
           {isLoading ? "Создание..." : "Создать подраздел"}
         </button>
       </form>
-
       {message && <p>{message}</p>}
     </div>
   );

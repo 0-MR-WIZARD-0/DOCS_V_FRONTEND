@@ -8,40 +8,35 @@
     justify-content: center;
     align-items: center;
     z-index: 99;
-    // filter: blur(0.5);
     background: rgba(0,0,0,0.2);
-
     & > div {
         width: 50%;
         padding: 30px 50px;
         border: 1px solid #808791; 
         border-radius: 12px;
         background-color: #f2f5f9;
-
         & > h2 {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-align: center;
         }
-
         & > form {
             display: flex;
             flex-direction: column;
-            & > span {
-                margin-top: 15px;
-            }
             & > button {
-                margin-top: 15px;
                 width: 100%;
+            }
+            &> button + button {
+                margin-top: 10px;
             }
         }
     }
 }
 
-// @media (min-width: 320px) and (max-width: 767.99px) { 
-//     .edit_modal_wrapper {
-//         & > div {
-//             width: 70%;
-//             padding: 30px 30px;
-//         }
-//     }
-// }
+@media (min-width: 320px) and (max-width: 767.99px) { 
+    .edit_modal_wrapper {
+        & > div {
+            width: 70%;
+            padding: 30px 30px;
+        }
+    }
+}

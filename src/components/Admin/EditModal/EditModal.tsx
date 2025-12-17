@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import api from "@/services/api";
+import api from "@/app/api/api";
 import { allowedTypes } from "@/types/allowedTypes";
 import { Document } from "@/types/document";
-import styles from "../EditSectionModal/EditSectionModal.module.scss"
+import styles from "../EditModal/EditModal.module.scss"
 import { Section } from "@/types/section";
 import { Subsection } from "@/types/subSection";
 import { fetchDocuments } from "@/store/slices/documentsSlice";
@@ -20,7 +20,7 @@ interface EditItemModalProps<T extends Item> {
   onUpdated: (updatedItem: T | undefined) => void;
 }
 
-export default function EditItemModal<T extends Item>({
+export default function EditModal<T extends Item>({
   type,
   data,
   parentId,
@@ -44,7 +44,7 @@ export default function EditItemModal<T extends Item>({
 
   const [title, setTitle] = useState(isDoc ? doc!.title : "");
   const [docDescription, setDocDescription] = useState(isDoc ? doc!.description ?? "" : "");
-  const [date, setDate] = useState(isDoc ? doc!.createdAt?.slice(0, 10) ?? "" : "");
+  // const [date, setDate] = useState(isDoc ? doc!.createdAt?.slice(0, 10) ?? "" : "");
 
   const [selectedSectionId, setSelectedSectionId] = useState(
     isDoc ? doc!.sectionId ?? "" : ""
@@ -111,7 +111,7 @@ export default function EditItemModal<T extends Item>({
     JSON.stringify({
       title,
       description: docDescription,
-      createdAt: date,
+      // createdAt: date,s
       sectionId: !isSub ? Number(selectedSectionId) || undefined : undefined,
       subsectionId: isSub ? Number(selectedSubsectionId) || undefined : undefined,
       removeFile: removeFile || undefined
@@ -202,6 +202,7 @@ export default function EditItemModal<T extends Item>({
               <input
                 type="checkbox"
                 checked={isSub}
+                style={{ marginBottom: "10px" }}
                 onChange={e => {
                   setIsSub(e.target.checked);
                   setSelectedSubsectionId("");
@@ -220,12 +221,6 @@ export default function EditItemModal<T extends Item>({
                 ))}
               </select>
             )}
-            <input
-              type="date"
-              value={date}
-              onChange={e => setDate(e.target.value)}
-            />
-
             {!file && (
               <button
                 type="button"
@@ -262,10 +257,11 @@ export default function EditItemModal<T extends Item>({
             </>
           )}
 
-          {message && (<p >{message}</p>)}
-
           <button type="submit" >Сохранить</button>
           <button type="button" onClick={onClose}>Отмена</button>
+
+          {message && (<p>{message}</p>)}
+
         </form>
       </div>
     </div>

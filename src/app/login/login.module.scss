@@ -10,3 +10,21 @@
         align-items: center;
     }
 }
+
+@media (min-width: 425px) and (max-width: 767.99px) {
+    .login_wrapper{
+        grid-template-columns: repeat(8, 1fr);
+        &>form{
+            grid-column: 2 / 8;
+        }
+    }
+}
+
+@media (min-width: 320px) and (max-width: 424.9px) {
+    .login_wrapper{
+        grid-template-columns: repeat(4, 1fr);
+        &>form{
+            grid-column: 1 / 5;
+        }
+    }
+}

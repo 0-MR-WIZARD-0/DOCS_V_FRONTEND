@@ -2,7 +2,7 @@
 
 import styles from "@/components/Admin/UploadForms/UploadDocument/UploadDocument.module.scss";
 import { useState, useEffect } from "react";
-import api from "@/services/api";
+import api from "@/app/api/api";
 import { allowedTypes } from "@/types/allowedTypes";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchDocuments } from "@/store/slices/documentsSlice";
@@ -11,7 +11,6 @@ import { Section } from "@/types/section";
 export default function UploadDocument() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
   const [sections, setSections] = useState<Section[]>([]);
@@ -59,7 +58,7 @@ export default function UploadDocument() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("createdAt", date);
+    // formData.append("createdAt", date);
     if (file) formData.append("file", file);
 
     formData.append(
@@ -67,7 +66,7 @@ export default function UploadDocument() {
       JSON.stringify({
         title,
         description,
-        createdAt: date,
+        // createdAt: date,
         sectionId: !isSub ? Number(selectedSectionId) : null,
         subsectionId: isSub ? Number(selectedSubsectionId) : null,
       })
@@ -85,7 +84,7 @@ export default function UploadDocument() {
       setMessage("Документ успешно загружен.");
       setTitle("");
       setDescription("");
-      setDate("");
+      // setDate("");
       setFile(null);
       setSelectedSectionId("");
       setSelectedSubsectionId("");
@@ -115,14 +114,12 @@ export default function UploadDocument() {
           placeholder="Название документа"
           disabled={isLoading}
         />
-
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Описание"
           disabled={isLoading}
         />
-
         <select
           value={selectedSectionId}
           onChange={(e) => {
@@ -139,11 +136,11 @@ export default function UploadDocument() {
             </option>
           ))}
         </select>
-
-        <label style={{ display: "block", marginBottom: 8 }}>
+        <label>
           <input
             type="checkbox"
             checked={isSub}
+            style={{ marginBottom: "10px" }}
             onChange={(e) => {
               setIsSub(e.target.checked);
               setSelectedSubsectionId("");
@@ -152,7 +149,6 @@ export default function UploadDocument() {
           />
           {" "}Это подраздел
         </label>
-
         {isSub && (
           <select
             value={selectedSubsectionId}
@@ -168,15 +164,6 @@ export default function UploadDocument() {
             ))}
           </select>
         )}
-
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-          disabled={isLoading}
-        />
-
         <div className={styles.file}>
           <label>
             <input
@@ -198,12 +185,10 @@ export default function UploadDocument() {
             <span>{isLoading ? "Загрузка файла..." : "Выберите файл"}</span>
           </label>
         </div>
-
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Создание..." : "Загрузить"}
         </button>
-
-        {message && <p>{message}</p>}
+        {message && <p style={{ marginTop: "20px" }}>{message}</p>}
       </div>
     </form>
   );

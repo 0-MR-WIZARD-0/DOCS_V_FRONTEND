@@ -4,14 +4,12 @@ import styles from "@/components/SearchBar/SearchBar.module.scss";
 
 import { useEffect, useRef, useState, useCallback } from "react";
 
-import api from "@/services/api";
+import api from "@/app/api/api";
 import { Document } from "@/types/document";
 import { SearchBarProps } from "@/types/searchFilters";
 
 export default function SearchBar({ onResults }: SearchBarProps) {
   const [query, setQuery] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
 
   const typingTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -20,12 +18,10 @@ export default function SearchBar({ onResults }: SearchBarProps) {
       const params: Record<string, string> = {};
 
       if (query.trim()) params.title = query.trim();
-      if (dateFrom) params.from = dateFrom;
-      if (dateTo) params.to = dateTo;
 
       const { data } = await api.get<Document[]>("/documents/search", { params });
 
-      onResults(data, { query, dateFrom, dateTo });
+      onResults(data, { query });
 
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -34,13 +30,13 @@ export default function SearchBar({ onResults }: SearchBarProps) {
         console.error("❌ Unknown error while filtering documents:", err);
       }
     }
-  }, [query, dateFrom, dateTo, onResults]);
+  }, [query, onResults]);
 
   useEffect(() => {
-    const hasFilters = query.trim() || dateFrom || dateTo;
+    const hasFilters = query.trim();
 
     if (!hasFilters) {
-      onResults([], { query: "", dateFrom: "", dateTo: "" });
+      onResults([], { query: "" });
       return;
     }
 
@@ -53,33 +49,17 @@ export default function SearchBar({ onResults }: SearchBarProps) {
     return () => {
       if (typingTimeout.current) clearTimeout(typingTimeout.current);
     };
-  }, [query, dateFrom, dateTo, fetchFilteredDocuments, onResults]);
+  }, [query, fetchFilteredDocuments, onResults]);
 
   return (
     <div className={styles.search_wrapper}>
-      <div>
         <input
           type="text"
-          placeholder="Искать по названию"
+          placeholder="Найти документ по названию"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className={styles.search}
         />
-        <div className={styles.wrapper_filters}>
-          <input
-            type="date"
-            value={dateFrom}
-            onChange={(e) => setDateFrom(e.target.value)}
-            className={styles.filter}
-          />
-          <input
-            type="date"
-            value={dateTo}
-            onChange={(e) => setDateTo(e.target.value)}
-            className={styles.filter}
-          />
-        </div>
-      </div>
     </div>
   );
 }

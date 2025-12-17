@@ -50,9 +50,7 @@ const SectionBlock: React.FC<Props> = ({ section, index, sections, setModal, doc
             <span className={`${styles.moveLink} ${index === sections.length - 1 ? styles.disabled : ""}`} onClick={moveDown}>вниз</span>
           </div>
         </div>
-
-        <p>{section.description}</p>
-
+        {(section.description ? <p>{section.description}</p> : "")}
         <div className={styles.buttons}>
           <button onClick={() => setModal({ type: "section", data: section })}>Редактировать</button>
           <button onClick={onDelete}>Удалить</button>

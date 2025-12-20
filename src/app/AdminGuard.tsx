@@ -16,7 +16,7 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuth, loading, pathname])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <p style={{ textAlign: "center" }}>Loading...</p>
 
   if (!pathname.startsWith('/admin')) return <>{children}</>
 

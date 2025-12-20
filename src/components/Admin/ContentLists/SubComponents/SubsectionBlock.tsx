@@ -6,8 +6,8 @@ import { Document } from "@/types/document";
 import { ModalType, MoveItemFn } from "../ContentList";
 import { useAppDispatch } from "@/store/hooks";
 import { deleteSubsection } from "@/store/slices/subsectionsSlice";
-import { useEffect, useState } from "react";
-import { fetchDocuments } from "@/store/slices/documentsSlice";
+import { useMemo } from "react";
+import { fetchSections } from "@/store/slices/sectionsSlice";
 
 interface Props {
   sub: Subsection;
@@ -20,22 +20,21 @@ interface Props {
 
 const SubsectionBlock: React.FC<Props> = ({ sub, index, section, setModal, moveItem, documents }) => {
   const dispatch = useAppDispatch();
-  const [subDocs, setSubDocs] = useState<Document[]>([]);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSubDocs(documents.filter(d => d.subsectionId === sub.id));
-  }, [documents, sub.id]);
+  const subDocs = useMemo(
+    () => documents.filter(d => d.subsectionId === sub.id),
+    [documents, sub.id]
+  );
 
   const onDelete = () => {
     if (!confirm("Удалить подраздел?")) return;
     dispatch(deleteSubsection(sub.id)).then(() => {
-      dispatch(fetchDocuments());
+      dispatch(fetchSections())
     });
   };
 
-  const moveUp = () => moveItem(section.subsections!, sub.id, "subsections", "up", sub.order);
-  const moveDown = () => moveItem(section.subsections!, sub.id, "subsections", "down", sub.order);
+  const moveUp = () => moveItem(section.subsections!, sub.id, "subsections", "up", sub.order)
+  const moveDown = () => moveItem(section.subsections!, sub.id, "subsections", "down", sub.order)
 
   return (
     <div className={styles.wrapper_section} style={{ paddingLeft: "10px" }}>

@@ -29,8 +29,8 @@ const DocumentItemComponent: React.FC<Props> = ({
 
   const parentId = subsectionId ?? sectionId;
 
-  const moveUp = () => moveItem(docs, doc.id, "documents", "up", doc.order);
-  const moveDown = () => moveItem(docs, doc.id, "documents", "down", doc.order);
+  const moveUp = () => moveItem(docs, doc.id, "documents", "up", doc.order)
+  const moveDown = () => moveItem(docs, doc.id, "documents", "down", doc.order)
 
   const onDelete = () => {
     if (!confirm("Удалить документ навсегда?")) return;

@@ -1,6 +1,7 @@
 import { Document } from "@/types/document";
 import DocumentItemComponent from "./DocumentItem";
 import { MoveItemFn } from "../ContentList";
+import { useMemo } from "react";
 
 interface Props {
   docs: Document[];
@@ -10,12 +11,15 @@ interface Props {
 }
 
 const DocumentList: React.FC<Props> = ({ docs, sectionId, subsectionId, moveItem }) => {
+
+  const sortedDocs = useMemo(
+    () => [...docs].sort((a, b) => a.order - b.order),
+    [docs]
+  );
+
   return (
     <>
-      {docs
-        .slice()
-        .sort((a, b) => a.order - b.order)
-        .map((doc, index) => (
+      {sortedDocs.map((doc, index) => (
           <DocumentItemComponent
             key={doc.id}
             doc={doc}

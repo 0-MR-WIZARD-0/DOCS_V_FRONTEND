@@ -58,7 +58,6 @@ export default function UploadDocument() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    // formData.append("createdAt", date);
     if (file) formData.append("file", file);
 
     formData.append(
@@ -66,7 +65,6 @@ export default function UploadDocument() {
       JSON.stringify({
         title,
         description,
-        // createdAt: date,
         sectionId: !isSub ? Number(selectedSectionId) : null,
         subsectionId: isSub ? Number(selectedSubsectionId) : null,
       })
@@ -84,7 +82,6 @@ export default function UploadDocument() {
       setMessage("Документ успешно загружен.");
       setTitle("");
       setDescription("");
-      // setDate("");
       setFile(null);
       setSelectedSectionId("");
       setSelectedSubsectionId("");

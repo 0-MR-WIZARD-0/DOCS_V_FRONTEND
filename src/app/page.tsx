@@ -6,7 +6,7 @@ import { Section } from "@/types/section";
 import { Document } from "@/types/document";
 import { SearchFilters } from "@/types/searchFilters";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import SearchBar from "@/components/SearchBar/SearchBar";
 import DocumentView from "@/components/DocumentView/DocumentView";
@@ -18,24 +18,28 @@ export default function Home() {
   const [searchedDocs, setSearchedDocs] = useState<Document[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
+  const isLoadingRef = useRef(false);
+
   const loadStructure = useCallback(async () => {
+    if (isLoadingRef.current) return;
+
+    isLoadingRef.current = true;
     try {
       const res = await api.get("/sections");
       setSections(
         Array.isArray(res.data)
-          ? res.data.sort((a: Section, b: Section) => a.order - b.order)
+          ? [...res.data].sort((a, b) => a.order - b.order)
           : []
       );
     } catch (e) {
       console.error("Failed to load sections:", e);
+    } finally {
+      isLoadingRef.current = false;
     }
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadStructure();
-    const interval = setInterval(loadStructure, 20000);
-    return () => clearInterval(interval);
   }, [loadStructure]);
 
   const handleSearchResults = useCallback(
@@ -45,9 +49,7 @@ export default function Home() {
 
       if (!hasFilters) {
         setIsSearching(false);
-        setTimeout(() => {
-          loadStructure();
-        }, 0);
+        loadStructure();
         return;
       }
 
@@ -58,7 +60,7 @@ export default function Home() {
   );
 
   return (
-    <div>
+    <main>
       <SearchBar onResults={handleSearchResults} />
       {isSearching ? (
         searchedDocs.length ? (
@@ -77,7 +79,11 @@ export default function Home() {
         ) : (
           <p style={{ textAlign: "center", marginTop: "20px" }}>Ничего не найдено</p>
         )
-      ) : (
+      ) : sections.length === 0 ? (
+        <p style={{ textAlign: "center", marginTop: "20px" }}>
+          Данные отсутствуют
+        </p>
+       ) : (
         <div className={styles.wrapper}>
           {sections.map((section) => (
             <div key={section.id} className={styles.wrapper_item}>
@@ -97,14 +103,14 @@ export default function Home() {
                     }
                   />
                 ))}
-              {section.subsections
-                ?.sort((a, b) => a.order - b.order)
+              {[...section.subsections!]
+                .sort((a, b) => a.order - b.order)
                 .map((sub) => (
                   <div key={sub.id} className={styles.wrapper_sub_item}>
                     <h3>{sub.name}</h3>
                     {(sub.description ? <p>{sub.description}</p> : "")}
-                    {sub.documents
-                      ?.sort((a, b) => a.order - b.order)
+                    {[...sub.documents]
+                      .sort((a, b) => a.order - b.order)
                       .map((doc) => (
                         <DocumentView
                           key={doc.id}
@@ -120,9 +126,9 @@ export default function Home() {
                   </div>
                 ))}
             </div>
-          ))}
+          ))} 
         </div>
       )}
-    </div>
+    </main>
   );
 }

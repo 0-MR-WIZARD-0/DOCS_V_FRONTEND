@@ -44,7 +44,6 @@ export default function EditModal<T extends Item>({
 
   const [title, setTitle] = useState(isDoc ? doc!.title : "");
   const [docDescription, setDocDescription] = useState(isDoc ? doc!.description ?? "" : "");
-  // const [date, setDate] = useState(isDoc ? doc!.createdAt?.slice(0, 10) ?? "" : "");
 
   const [selectedSectionId, setSelectedSectionId] = useState(
     isDoc ? doc!.sectionId ?? "" : ""
@@ -111,7 +110,6 @@ export default function EditModal<T extends Item>({
     JSON.stringify({
       title,
       description: docDescription,
-      // createdAt: date,s
       sectionId: !isSub ? Number(selectedSectionId) || undefined : undefined,
       subsectionId: isSub ? Number(selectedSubsectionId) || undefined : undefined,
       removeFile: removeFile || undefined
@@ -132,13 +130,10 @@ export default function EditModal<T extends Item>({
           sectionId: updated.sectionId ?? doc!.sectionId,
           subsectionId: updated.subsectionId ?? doc!.subsectionId
         } as T;
-
-        
         onUpdated(safeUpdated);
         dispatch(fetchDocuments());
         onClose();
         return;
-
       } catch (err) {
         console.error(err);
         return setMessage("Ошибка при обновлении документа");

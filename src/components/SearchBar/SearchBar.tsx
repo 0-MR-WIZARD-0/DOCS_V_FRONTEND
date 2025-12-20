@@ -9,20 +9,25 @@ import { Document } from "@/types/document";
 import { SearchBarProps } from "@/types/searchFilters";
 
 export default function SearchBar({ onResults }: SearchBarProps) {
-  const [query, setQuery] = useState("");
 
+  const [query, setQuery] = useState("");
   const typingTimeout = useRef<NodeJS.Timeout | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const fetchFilteredDocuments = useCallback(async () => {
+
+    if (!query.trim()) return;
+
+    abortRef?.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     try {
-      const params: Record<string, string> = {};
-
-      if (query.trim()) params.title = query.trim();
-
-      const { data } = await api.get<Document[]>("/documents/search", { params });
-
+      const { data } = await api.get<Document[]>("/documents/search", { 
+        params: {title: query.trim()},
+        signal: controller.signal
+      });
       onResults(data, { query });
-
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error("❌ Error while filtering documents:", err.message);
@@ -33,23 +38,12 @@ export default function SearchBar({ onResults }: SearchBarProps) {
   }, [query, onResults]);
 
   useEffect(() => {
-    const hasFilters = query.trim();
-
-    if (!hasFilters) {
-      onResults([], { query: "" });
-      return;
-    }
-
     if (typingTimeout.current) clearTimeout(typingTimeout.current);
 
-    typingTimeout.current = setTimeout(() => {
-      fetchFilteredDocuments();
-    }, 400);
+    typingTimeout.current = setTimeout(fetchFilteredDocuments, 400);
 
-    return () => {
-      if (typingTimeout.current) clearTimeout(typingTimeout.current);
-    };
-  }, [query, fetchFilteredDocuments, onResults]);
+    return () => clearTimeout(typingTimeout.current!);
+  }, [fetchFilteredDocuments]);
 
   return (
     <div className={styles.search_wrapper}>
@@ -57,7 +51,11 @@ export default function SearchBar({ onResults }: SearchBarProps) {
           type="text"
           placeholder="Найти документ по названию"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            const v = e.target.value;
+            setQuery(v) 
+            if (!v.trim()) onResults([], {query: ""})
+          }}
           className={styles.search}
         />
     </div>

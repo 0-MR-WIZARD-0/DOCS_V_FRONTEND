@@ -13,7 +13,7 @@ export default function AdminTabs() {
   const [activeTab, setActiveTab] = useState<'uploadSection' | 'listSections' | 'uploadDocument'>('uploadSection');
 
   return (
-    <div className={styles.tabs_wrapper}>
+    <nav className={styles.tabs_wrapper}>
       <div>
         <button onClick={() => setActiveTab('uploadSection')}>Создать раздел / подраздел</button>
         <button onClick={() => setActiveTab('uploadDocument')}>Создать документ</button>
@@ -22,6 +22,6 @@ export default function AdminTabs() {
       {activeTab === 'uploadSection' && <UploadSection />}
       {activeTab === 'listSections' && <ContentList />}
       {activeTab === 'uploadDocument' && <UploadDocument />}
-    </div>
+    </nav>
   );
 }

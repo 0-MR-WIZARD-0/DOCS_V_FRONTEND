@@ -6,9 +6,8 @@ import { Subsection } from "@/types/subSection";
 import { Document } from "@/types/document";
 import { ModalType, MoveItemFn } from "../ContentList";
 import { useAppDispatch } from "@/store/hooks";
-import { deleteSection } from "@/store/slices/sectionsSlice";
-import { fetchDocuments } from "@/store/slices/documentsSlice";
-import { useEffect, useState } from "react";
+import { deleteSection, fetchSections } from "@/store/slices/sectionsSlice";
+import { useMemo } from "react";
 
 interface Props {
   section: Section;
@@ -23,17 +22,24 @@ interface Props {
 
 const SectionBlock: React.FC<Props> = ({ section, index, sections, setModal, documents, moveItem }) => {
   const dispatch = useAppDispatch();
-  const [sectionDocs, setSectionDocs] = useState<Document[]>([]);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSectionDocs(documents.filter(d => d.sectionId === section.id && !d.subsectionId));
-  }, [documents, section.id]);
+  const sectionDocs = useMemo(
+    () => documents.filter(d => d.sectionId === section.id && !d.subsectionId),
+    [documents, section.id]
+  );
+
+  const sortedSubsections = useMemo(
+    () =>
+      [...(section.subsections ?? [])].sort(
+        (a, b) => a.order - b.order
+      ),
+    [section.subsections]
+  );
 
   const onDelete = () => {
     if (!confirm("Удалить раздел?")) return;
     dispatch(deleteSection(section.id)).then(() => {
-      dispatch(fetchDocuments());
+      dispatch(fetchSections());
     });
   };
 
@@ -59,9 +65,7 @@ const SectionBlock: React.FC<Props> = ({ section, index, sections, setModal, doc
 
       <DocumentList docs={sectionDocs} sectionId={section.id} moveItem={moveItem} />
 
-      {section.subsections
-        ?.slice()
-        .sort((a, b) => a.order - b.order)
+      {sortedSubsections
         .map((sub, j) => (
           <SubsectionBlock
             key={sub.id}
@@ -70,7 +74,7 @@ const SectionBlock: React.FC<Props> = ({ section, index, sections, setModal, doc
             section={section}
             setModal={setModal}
             moveItem={moveItem}
-            documents={documents.filter(d => d.subsectionId === sub.id)}
+            documents={documents}
           />
         ))}
     </div>

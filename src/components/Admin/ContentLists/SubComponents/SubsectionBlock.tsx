@@ -1,24 +1,12 @@
 import styles from "@/components/Admin/ContentLists/ContentList.module.scss";
 import DocumentList from "./DocumentList";
-import { Section } from "@/types/section";
-import { Subsection } from "@/types/subSection";
-import { Document } from "@/types/document";
-import { ModalType, MoveItemFn } from "../ContentList";
+import { PropsSubsection } from "@/types/subSection";
 import { useAppDispatch } from "@/store/hooks";
 import { deleteSubsection } from "@/store/slices/subsectionsSlice";
 import { useMemo } from "react";
 import { fetchSections } from "@/store/slices/sectionsSlice";
 
-interface Props {
-  sub: Subsection;
-  index: number;
-  section: Section;
-  setModal: React.Dispatch<React.SetStateAction<ModalType | null>>;
-  moveItem: MoveItemFn;
-  documents: Document[];
-}
-
-const SubsectionBlock: React.FC<Props> = ({ sub, index, section, setModal, moveItem, documents }) => {
+const SubsectionBlock: React.FC<PropsSubsection> = ({ sub, index, section, setModal, moveItem, documents }) => {
   const dispatch = useAppDispatch();
 
   const subDocs = useMemo(

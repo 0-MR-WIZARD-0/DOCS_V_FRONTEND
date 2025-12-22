@@ -1,28 +1,11 @@
 import { useState } from "react";
 import styles from "@/components/Admin/ContentLists/ContentList.module.scss";
-import { Document } from "@/types/document";
+import { PropsDocument } from "@/types/document";
 import EditItemModal from "../../EditModal/EditModal";
-import { MoveItemFn } from "../ContentList";
 import { useAppDispatch } from "@/store/hooks";
 import { deleteDocument } from "@/store/slices/documentsSlice";
 
-interface Props {
-  doc: Document;
-  index: number;
-  docs: Document[];
-  moveItem: MoveItemFn;
-  sectionId?: number;
-  subsectionId?: number;
-}
-
-const DocumentItemComponent: React.FC<Props> = ({
-  doc,
-  docs,
-  index,
-  moveItem,
-  sectionId,
-  subsectionId,
-}) => {
+const DocumentItemComponent: React.FC<PropsDocument> = ({doc,docs,index,moveItem,sectionId,subsectionId}) => {
 
   const [modal, setModal] = useState(false);
   const dispatch = useAppDispatch();

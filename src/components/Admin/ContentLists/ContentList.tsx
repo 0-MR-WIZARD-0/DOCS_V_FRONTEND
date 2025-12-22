@@ -13,23 +13,7 @@ import { RootState, AppDispatch } from "@/store/store";
 import { fetchSections } from "@/store/slices/sectionsSlice";
 import { fetchSubsections } from "@/store/slices/subsectionsSlice";
 import { fetchDocuments } from "@/store/slices/documentsSlice";
-
-import { Section } from "@/types/section";
-import { Subsection } from "@/types/subSection";
-import { Document } from "@/types/document";
-
-export type ModalType =
-  | { type: "section"; data: Section }
-  | { type: "subsection"; data: Subsection; parentId: number }
-  | { type: "document"; data: Document };
-
-export type MoveItemFn = (
-  allItems: Document[] | Section[] | Subsection[],
-  itemId: number,
-  type: "sections" | "subsections" | "documents",
-  direction: "up" | "down",
-  order?: number 
-) => Promise<void>;
+import { MoveItemFn } from "@/types/modalType";
 
 const ContentList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

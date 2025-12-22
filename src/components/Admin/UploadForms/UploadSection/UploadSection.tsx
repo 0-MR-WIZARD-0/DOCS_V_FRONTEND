@@ -1,56 +1,72 @@
 "use client";
 
 import styles from "@/components/Admin/UploadForms/UploadSection/UploadSection.module.scss";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "@/app/api/api";
+import { Section } from "@/types/section";
+
+type Message =
+  | { type: "success"; text: string }
+  | { type: "error"; text: string }
+  | null;
 
 export default function ManageSections() {
-  const [sections, setSections] = useState<{ id: number; name: string }[]>([]);
+  const [sections, setSections] = useState<Pick<Section, "id" | "name">[]>([]);
+
   const [sectionName, setSectionName] = useState("");
-  const [subsectionName, setSubsectionName] = useState("");
-  const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
   const [sectionDescription, setSectionDescription] = useState("");
+
+  const [subsectionName, setSubsectionName] = useState("");
   const [subsectionDescription, setSubsectionDescription] = useState("");
-  const [message, setMessage] = useState("");
+  const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
+
+  const [message, setMessage] = useState<Message>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const loadSections = async () => {
+  const loadSections = useCallback(async () => {
     try {
       const res = await api.get("/sections");
-      setSections(res.data ?? []);
+
+      setSections(
+        Array.isArray(res.data)
+          ? res.data.map((s) => ({ id: s.id, name: s.name }))
+          : []
+      );
     } catch (err) {
       console.error("Failed to load sections:", err);
-      setMessage("Failed to load sections.");
+      setMessage({ type: "error", text: "Не удалось загрузить разделы." });
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadSections();
-  }, []);
+  }, [loadSections]);
 
   const handleCreateSection = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
+    setMessage(null);
 
     if (!sectionName.trim()) {
-      setMessage("Section name is required.");
+      setMessage({ type: "error", text: "Название раздела обязательно." });
       return;
     }
 
     try {
       setIsLoading(true);
-      const res = await api.post("/sections", {
+
+      await api.post("/sections", {
         name: sectionName,
         description: sectionDescription,
       });
 
-      setSections((prev) => [...prev, res.data]);
+      await loadSections();
+
       setSectionName("");
       setSectionDescription("");
-      setMessage("Раздел успешно создан.");
+      setMessage({ type: "success", text: "Раздел успешно создан." });
     } catch (err) {
       console.error("Create section error:", err);
-      setMessage("Failed to create section.");
+      setMessage({ type: "error", text: "Ошибка при создании раздела." });
     } finally {
       setIsLoading(false);
     }
@@ -58,27 +74,37 @@ export default function ManageSections() {
 
   const handleCreateSubsection = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
+    setMessage(null);
 
     if (!subsectionName.trim() || !selectedSectionId) {
-      setMessage("Subsection name and section selection are required.");
+      setMessage({
+        type: "error",
+        text: "Выберите раздел и укажите название подраздела.",
+      });
       return;
     }
 
     try {
       setIsLoading(true);
+
       await api.post("/subsections", {
         name: subsectionName,
         description: subsectionDescription,
         sectionId: selectedSectionId,
       });
 
+      await loadSections();
+
       setSubsectionName("");
       setSubsectionDescription("");
-      setMessage("Подраздел успешно создан.");
+      setSelectedSectionId(null);
+      setMessage({ type: "success", text: "Подраздел успешно создан." });
     } catch (err) {
       console.error("Create subsection error:", err);
-      setMessage("Failed to create subsection.");
+      setMessage({
+        type: "error",
+        text: "Ошибка при создании подраздела.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +112,6 @@ export default function ManageSections() {
 
   return (
     <div className={styles.form_wrapper_uploadSection}>
-
       <form onSubmit={handleCreateSection}>
         <h3>Создать раздел</h3>
         <input
@@ -94,7 +119,6 @@ export default function ManageSections() {
           value={sectionName}
           onChange={(e) => setSectionName(e.target.value)}
           placeholder="Название раздела"
-          required
           disabled={isLoading}
         />
         <textarea
@@ -112,13 +136,13 @@ export default function ManageSections() {
         <h3>Создать подраздел</h3>
         <select
           value={selectedSectionId ?? ""}
-          onChange={(e) => setSelectedSectionId(Number(e.target.value))}
-          required
+          onChange={(e) => {
+            const value = e.target.value;
+            setSelectedSectionId(value ? Number(value) : null);
+          }}
           disabled={isLoading}
         >
-          <option value="" disabled>
-            Выберите раздел
-          </option>
+          <option value="">Выберите раздел</option>
           {sections.map((s) => (
             <option key={s.id} value={s.id}>
               {s.name}
@@ -130,7 +154,6 @@ export default function ManageSections() {
           value={subsectionName}
           onChange={(e) => setSubsectionName(e.target.value)}
           placeholder="Название подраздела"
-          required
           disabled={isLoading}
         />
         <textarea
@@ -143,7 +166,7 @@ export default function ManageSections() {
           {isLoading ? "Создание..." : "Создать подраздел"}
         </button>
       </form>
-      {message && <p>{message}</p>}
+      {message && (<p style={{color: message.type === "error" ? "red" : "green"}}>{message.text}</p>)}
     </div>
   );
 }

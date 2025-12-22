@@ -4,7 +4,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import ReduxProvider from "@/store/ReduxProvider";
 import AuthInit from "./providers/AuthInit";
-import AdminGuard from "./AdminGuard";
+import AdminGuard from "../guards/AdminGuard";
 
 export const metadata: Metadata = {
   title: "Диссертационный совет",

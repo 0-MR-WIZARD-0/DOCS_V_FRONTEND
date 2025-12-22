@@ -1,26 +1,12 @@
 import styles from "@/components/Admin/ContentLists/ContentList.module.scss";
 import DocumentList from "./DocumentList";
 import SubsectionBlock from "./SubsectionBlock";
-import { Section } from "@/types/section";
-import { Subsection } from "@/types/subSection";
-import { Document } from "@/types/document";
-import { ModalType, MoveItemFn } from "../ContentList";
+import { PropsSection } from "@/types/section";
 import { useAppDispatch } from "@/store/hooks";
 import { deleteSection, fetchSections } from "@/store/slices/sectionsSlice";
 import { useMemo } from "react";
 
-interface Props {
-  section: Section;
-  index: number;
-  sections: Section[];
-  setModal: React.Dispatch<React.SetStateAction<ModalType | null>>;
-  documents: Document[];
-  subsections: Subsection[];
-  isLoading: boolean;
-  moveItem: MoveItemFn;
-}
-
-const SectionBlock: React.FC<Props> = ({ section, index, sections, setModal, documents, moveItem }) => {
+const SectionBlock: React.FC<PropsSection> = ({ section, index, sections, setModal, documents, moveItem }) => {
   const dispatch = useAppDispatch();
 
   const sectionDocs = useMemo(
@@ -65,8 +51,7 @@ const SectionBlock: React.FC<Props> = ({ section, index, sections, setModal, doc
 
       <DocumentList docs={sectionDocs} sectionId={section.id} moveItem={moveItem} />
 
-      {sortedSubsections
-        .map((sub, j) => (
+      {sortedSubsections.map((sub, j) => (
           <SubsectionBlock
             key={sub.id}
             sub={sub}

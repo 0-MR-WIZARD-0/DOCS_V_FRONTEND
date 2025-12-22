@@ -9,16 +9,7 @@ import { Section } from "@/types/section";
 import { Subsection } from "@/types/subSection";
 import { fetchDocuments } from "@/store/slices/documentsSlice";
 import { useAppDispatch } from "@/store/hooks";
-
-export type Item = Section | Subsection | Document;
-
-interface EditItemModalProps<T extends Item> {
-  type: "section" | "subsection" | "document";
-  data: T;
-  parentId?: number;
-  onClose: () => void;
-  onUpdated: (updatedItem: T | undefined) => void;
-}
+import { EditItemModalProps, Item } from "@/types/modalType";
 
 export default function EditModal<T extends Item>({
   type,

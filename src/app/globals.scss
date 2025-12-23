@@ -28,7 +28,7 @@ header, footer{
 }
 
 header{
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #808791;
   margin: 0 0 20px 0;
 }
 
@@ -38,7 +38,7 @@ main{
 
 footer{
   flex: 0 0 auto;
-  border-top: 1px solid black;
+  border-top: 1px solid #808791;
   margin-top: 20px;
 }
 
@@ -71,6 +71,10 @@ button{
 
 p, a, span, label, button{
   font-size: 14px;
+}
+
+a:hover{
+  color: #89b222;
 }
 
 label{

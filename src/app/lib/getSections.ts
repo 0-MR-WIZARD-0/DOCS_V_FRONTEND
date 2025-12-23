@@ -5,7 +5,8 @@ const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
 export async function getSections(): Promise<Section[]> {
   try {
     const res = await fetch(`${API_URL}/sections`, {
-      cache: "no-store",
+      method: 'GET',
+      cache: "force-cache",
     });
 
     if (!res.ok) {

@@ -6,7 +6,7 @@ export async function getSections(): Promise<Section[]> {
   try {
     const res = await fetch(`${API_URL}/sections`, {
       method: 'GET',
-      cache: "force-cache",
+      cache: "no-store",
     });
 
     if (!res.ok) {

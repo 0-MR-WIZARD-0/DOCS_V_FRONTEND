@@ -24,6 +24,9 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log(process.env.NEXT_PUBLIC_API_URL);
+    
+
     const res = await dispatch(loginUser({ username, password }));
     if (!loginUser.fulfilled.match(res)) return;
 

@@ -1,6 +1,6 @@
 import { Section } from "@/types/section";
 
-const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.API_URL;
 
 export async function getSections(): Promise<Section[]> {
   try {

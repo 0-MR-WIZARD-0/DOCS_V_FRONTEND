@@ -1,17 +1,17 @@
 .wrapper_sectionList{
     display: flex;
     flex-direction: column;
-    &>div{
+    div{
         &>.wrapper_section{
             &>.title{
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                &>div{
-                    &>span+span{
+                div{
+                    span+span{
                         margin-left: 10px;
                     }
-                }
+                } 
             }
             &>p{
                 margin-top: 10px;

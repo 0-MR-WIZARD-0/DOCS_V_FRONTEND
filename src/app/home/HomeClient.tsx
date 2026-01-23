@@ -11,7 +11,7 @@ import DocumentView from "@/components/DocumentView/DocumentView";
 
 import styles from "@/app/home/main.module.scss";
 
-const API_URL = process.env.INTERNAL_API_URL!;
+const API_URL = process.env.INTERNAL_API_URL;
 
 interface Props {
   sections: Section[];
